@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 sap-ui-cachebuster-info.json
 extended_runnable_file.html
@@ -8,3 +9,17 @@ fioriHtmlRunner.html
 .*/fioriHtmlRunner.html
 visual_ext_index.html
 /webapp/visual_ext_index.html
+=======
+node_modules/
+dist/
+.scp/
+.env
+Makefile*.mta
+mta_archives
+mta-*
+resources
+archive.zip
+.*_mta_build_tmp
+mta.yaml
+*.yaml
+>>>>>>> 6d5db9c34641be756c228f54d1401ac33a2f1f2b
