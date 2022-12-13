@@ -3,13 +3,9 @@
 	<App>
 		<pages>
 			<Page title="{i18n>title}">
-<<<<<<< HEAD
 				<content>
 					<Text text='Hello world'/>
 				</content>
-=======
-				<content></content>
->>>>>>> 6d5db9c34641be756c228f54d1401ac33a2f1f2b
 			</Page>
 		</pages>
 	</App>
