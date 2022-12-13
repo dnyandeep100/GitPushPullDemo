@@ -1,0 +1,94 @@
+_schema-version: "3.2"
+ID: gitpushpulldemo
+description: A Fiori application.
+version: 0.0.1
+modules:
+- name: gitpushpulldemo-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: gitpushpulldemo-destination-service
+    parameters:
+      content-target: true
+  - name: gitpushpulldemo-repo-host
+    parameters:
+      service-key:
+        name: gitpushpulldemo-repo-host-key
+  - name: gitpushpulldemo-uaa
+    parameters:
+      service-key:
+        name: gitpushpulldemo-uaa-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: gitpushpulldemo_html_repo_host
+          ServiceInstanceName: gitpushpulldemo-html5-srv
+          ServiceKeyName: gitpushpulldemo-repo-host-key
+          sap.cloud.service: gitpushpulldemo
+        - Authentication: OAuth2UserTokenExchange
+          Name: gitpushpulldemo_uaa
+          ServiceInstanceName: gitpushpulldemo-xsuaa-srv
+          ServiceKeyName: gitpushpulldemo-uaa-key
+          sap.cloud.service: gitpushpulldemo
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: gitpushpulldemo-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: gitpushpulldemo-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - gitpushpulldemo.zip
+      name: gitpushpulldemo
+      target-path: resources/
+- name: gitpushpulldemo
+  type: html5
+  path: .
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: gitpushpulldemo-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: gitpushpulldemo-destination-service
+    service-plan: lite
+- name: gitpushpulldemo-uaa
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: gitpushpulldemo-xsuaa-srv
+    service-plan: application
+- name: gitpushpulldemo-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: gitpushpulldemo-html5-srv
+    service-plan: app-host
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
